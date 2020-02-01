@@ -16,9 +16,8 @@ This exercise is focusing on the [Exactly-once semantics of Kafka](https://mediu
 per second to topic `bank-transaction`. 
 2. Stream application `transaction-update-stream` receives transactions and 
 updates balance by counting the number of transaction, 
-aggregating amount, and updating time to the latest time. 
-And finally send the balance to `bank-balance` topic.
-3. `BankBalanceConsumer` consumes the balance and log out.
+aggregating amount, and updating time to the latest time, and finally sends the balance to `bank-balance` topic.
+3. `BankBalanceConsumer` consumes the balance and logs to screen.
 
 > __WARNING__: this might not be the best practice.
 
