@@ -34,5 +34,5 @@ spring:
 ---
 kafka:
   topic:
-    bank-transaction: bank-transaction
-    bank-balance: bank-balance
+    bankTransaction: bank-transaction
+    bankBalance: bank-balance

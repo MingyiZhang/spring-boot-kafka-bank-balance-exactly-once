@@ -2,6 +2,7 @@ package com.example.bankbalanceexactlyonce.processor;
 
 import com.example.bankbalanceexactlyonce.model.BankBalance;
 import com.example.bankbalanceexactlyonce.model.BankTransaction;
+import com.example.bankbalanceexactlyonce.topic.KafkaTopicConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
@@ -18,16 +19,22 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class KafkaStreamConfig {
 
-  @Value("${kafka.topic.bank-transaction}")
-  private String bankTransactionTopic;
+//  @Value("${kafka.topic.bank-transaction}")
+//  private String bankTransactionTopic;
+//
+//  @Value("${kafka.topic.bank-balance}")
+//  private String bankBalanceTopic;
 
-  @Value("${kafka.topic.bank-balance}")
-  private String bankBalanceTopic;
+  private KafkaTopicConfig kafkaTopics;
+
+  KafkaStreamConfig(KafkaTopicConfig kafkaTopics) {
+    this.kafkaTopics = kafkaTopics;
+  }
 
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   @Bean
   public KStream<String, BankTransaction> transactionUpdateStream(StreamsBuilder builder) {
-    KStream<String, BankTransaction> stream = builder.stream(bankTransactionTopic);
+    KStream<String, BankTransaction> stream = builder.stream(kafkaTopics.getBankTransaction());
     stream.groupByKey()
         .aggregate(
             BankBalance::new,
@@ -35,7 +42,7 @@ public class KafkaStreamConfig {
             Materialized.as("bank-balance-aggregate")
         )
         .toStream()
-        .to(bankBalanceTopic);
+        .to(kafkaTopics.getBankBalance());
 
     return stream;
   }

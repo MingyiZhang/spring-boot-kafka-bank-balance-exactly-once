@@ -1,30 +1,34 @@
 package com.example.bankbalanceexactlyonce.topic;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.stereotype.Component;
 
-@Component
 @Slf4j
+@Component
+@ConfigurationProperties(prefix = "kafka.topic")
 public class KafkaTopicConfig {
 
-  @Value("${kafka.topic.bank-transaction}")
-  private String bankTransactionTopic;
+  @Getter @Setter
+  private String bankTransaction;
 
-  @Value("${kafka.topic.bank-balance}")
-  private String bankBalanceTopic;
+  @Getter @Setter
+  private String bankBalance;
 
   @Bean
-  public NewTopic getBankTransactionTopic() {
-    return createNewTopic(bankTransactionTopic, 1, 1);
+  public NewTopic createBankTransactionTopic() {
+    return createNewTopic(bankTransaction, 1, 1);
   }
 
   @Bean
-  public NewTopic getBankBalanceTopic() {
-    return createNewTopic(bankBalanceTopic, 1, 1);
+  public NewTopic createBankBalanceTopic() {
+    return createNewTopic(bankBalance, 1, 1);
   }
 
   private NewTopic createNewTopic(String topic, Integer partitions, Integer replicas) {
